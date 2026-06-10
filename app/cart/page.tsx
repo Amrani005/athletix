@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 
 const page = () => {
   return (
-    <div className='flex flex-col gap-40'>
+    <div className='flex flex-col gap-"0'>
       <Header/>
       <Cart/>
       <Footer/>
