@@ -4,8 +4,7 @@ import { Fira_Code } from "next/font/google";
 import Header from "@/components/Header";
 import React from "react";
 import { ProductProvider } from "./context/ProductContext";
-import "./globals.css";
-
+import "@/app/globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
