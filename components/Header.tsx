@@ -88,7 +88,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex gap-8">
             {navigation.map((item) => (
-              <Link
+              <Link  
                 key={item.id}
                 href={item.url}
                 className="text-xs font-bold uppercase tracking-[0.15em] text-neutral-400 hover:text-black transition-colors duration-300 relative group"
@@ -103,7 +103,8 @@ const Header = () => {
 
         {/* CENTER: Logo */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-          <Link href="/home" onClick={closeNavigation}>
+          <Link href="/home" onClick={closeNavigation}> 
+          
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tighter text-black">
               ATHLETIX
             </h1>
