@@ -5,19 +5,14 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import {authOptions} from '@/lib/auth'
 
-// ==========================================
-// 1. دالة إضافة منتج إلى السلة (Add To Cart)
-// ==========================================
 export async function addToCart(productId: string, size: string, quantity: number = 1) {
   try {
-    // 1. التحقق من هوية المستخدم (يجب أن يكون مسجل الدخول)
     const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
     return { error: "غير مصرح لك - يرجى تسجيل الدخول" };
   }
 
-    // 2. جلب المستخدم وسلة التسوق الخاصة به
     const user = await db.user.findUnique({
       where: { useremail: session.user.email },
       include: { cart: true }
@@ -27,7 +22,6 @@ export async function addToCart(productId: string, size: string, quantity: numbe
       return { error: "لم يتم العثور على سلة تسوق." };
     }
 
-    // 3. التحقق مما إذا كان هذا المنتج بنفس المقاس موجوداً مسبقاً في السلة
     const existingCartItem = await db.cartItem.findUnique({
       where: {
         cartId_productId_size: {
@@ -39,13 +33,11 @@ export async function addToCart(productId: string, size: string, quantity: numbe
     });
 
     if (existingCartItem) {
-      // إذا كان موجوداً: نقوم بزيادة الكمية فقط (لا ننشئ سطراً جديداً)
       await db.cartItem.update({
         where: { id: existingCartItem.id },
         data: { quantity: existingCartItem.quantity + quantity }
       });
     } else {
-      // إذا لم يكن موجوداً: نقوم بإنشاء عنصر جديد داخل السلة
       await db.cartItem.create({
         data: {
           cartId: user.cart.id,
@@ -56,9 +48,8 @@ export async function addToCart(productId: string, size: string, quantity: numbe
       });
     }
 
-    // 4. تحديث مسارات الواجهة الأمامية فوراً ليعكس العداد التغيير
     revalidatePath('/cart');
-    revalidatePath('/collection'); // أو أي صفحة تعرض المنتجات
+    revalidatePath('/collection');
     
     return { success: "تمت إضافة المنتج إلى السلة بنجاح!" };
 
@@ -68,15 +59,11 @@ export async function addToCart(productId: string, size: string, quantity: numbe
   }
 }
 
-// ==========================================
-// 2. دالة جلب محتويات السلة (Get User Cart)
-// ==========================================
 export async function getUserCart() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) return null;
 
-    // جلب المستخدم مع سلته، و"تضمين" العناصر، و"تضمين" تفاصيل المنتج الفعلي داخل كل عنصر
     const user = await db.user.findUnique({
       where: { useremail: session.user.email },
       include: {
@@ -84,9 +71,9 @@ export async function getUserCart() {
           include: {
             item: {
               include: {
-                product: true // نحتاج بيانات المنتج (الصورة، السعر، الاسم) لعرضها
+                product: true
               },
-              orderBy: { id: 'asc' } // ترتيب العناصر لكي لا تتغير أماكنها عند تحديث الكمية
+              orderBy: { id: 'asc' }
             }
           }
         }
@@ -103,9 +90,6 @@ export async function getUserCart() {
   }
 }
 
-// ==========================================
-// 3. دالة حذف عنصر من السلة (Remove Item)
-// ==========================================
 export async function removeCartItem(cartItemId: string) {
   try {
     const session = await getServerSession(authOptions);
@@ -127,26 +111,24 @@ export async function removeCartItem(cartItemId: string) {
 export async function getCartItemsCount() {
   try {
     const session = await getServerSession();
-    if (!session?.user?.email) return 0; // إذا لم يكن مسجلاً، السلة صفر
+    if (!session?.user?.email) return 0;
 
     const user = await db.user.findUnique({
       where: { useremail: session.user.email },
       include: {
         cart: {
-          include: { item: true } // نجلب العناصر لنحسب عددها
+          include: { item: true }
         }
       }
     });
 
     if (!user || !user.cart) return 0;
 
-    // نرجع طول المصفوفة الحقيقي من قاعدة بيانات Neon
     return user.cart.item.length;
   } catch (error) {
     return 0;
   }
 }
-// دالة لتحديث كمية المنتج داخل السلة
 export async function updateCartItemQuantity(cartItemId: string, quantity: number) {
   try {
     await db.cartItem.update({

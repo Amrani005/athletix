@@ -23,7 +23,6 @@ export async function saveDraftOrder(data: any) {
      size: data.size || "Standard"
    });
    
-   // تم إصلاح الخطأ الإملائي هنا (address بدلاً من adress)
    const fullAdress = `${data.address} - ولاية: ${data.wilaya} (${data.deliveryType})`;
 
    let resultDraftId = null;
@@ -70,7 +69,6 @@ export async function saveDraftOrder(data: any) {
     }
    }
    
-   // غسيل الكاش للداشبورد
    revalidatePath("/dashboard/draft");
    revalidatePath("/dashboard/orders");
    revalidatePath("/dashboard");
@@ -137,7 +135,6 @@ export async function deletDraft(formData: FormData){
 }
 export async function addToCart(productId: string, selectedSize: string, quantity: number = 1) {
   try{
-    // 1. التحقق من هوية المستخدم (يجب أن يكون مسجل الدخول)
     const session = await getServerSession();
     
     if (!session?.user?.email) {
@@ -151,7 +148,6 @@ export async function addToCart(productId: string, selectedSize: string, quantit
     if (!user ){
       return { error: "account not found." };
     }
-    // إذا لم يكن لديه سلة لأي سبب، نقوم بإنشائها له
     let userCart = user.cart;
     if (!userCart) {
       userCart = await db.cart.create({
@@ -159,7 +155,6 @@ export async function addToCart(productId: string, selectedSize: string, quantit
       });
     }
 
-    // 3. التحقق مما إذا كان هذا المنتج بنفس المقاس موجوداً بالفعل داخل سلته
     const existingCartItem = await db.cartItem.findUnique({
       where: {
         cartId_productId_size: {
@@ -170,14 +165,12 @@ export async function addToCart(productId: string, selectedSize: string, quantit
       }
     });
 
-    // 4. إذا كان موجوداً، نقوم بزيادة الكمية فقط لتجنب التكرار
     if (existingCartItem) {
       await db.cartItem.update({
         where: { id: existingCartItem.id },
         data: { quantity: existingCartItem.quantity + quantity }
       });
     } 
-    // 5. إذا لم يكن موجوداً، نقوم بإنشاء عنصر جديد في السلة
     
       await db.cartItem.create({
         data: {
@@ -189,11 +182,31 @@ export async function addToCart(productId: string, selectedSize: string, quantit
       });
     
 
-    // إرجاع رسالة نجاح للواجهة الأمامية
     return {success: "Product added to cart successfully!"}
 
      
   } catch (error) {
     return { error:"error has occured "}
    }
+}
+
+export async function getRelatedProducts(category: string, productId: string) {
+  if (!category || !productId) return [];
+
+  return db.product.findMany({
+    where: {
+      category,
+      id: { not: productId },
+      isArchived: false,
+    },
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      imageUrl: true,
+      category: true,
+    },
+    orderBy: { createdAt: "desc" },
+    take: 4,
+  });
 }

@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { registerUser } from "@/actions/auth"; // الدالة التي برمجناها للمرحلة 2
+import { registerUser } from "@/actions/auth";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const SignUp = () => {
   const router = useRouter();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -25,15 +27,13 @@ const SignUp = () => {
     setLoading(true);
     setError("");
 
-    // استدعاء دالة السيرفر التي تنشئ المستخدم والسلة في Neon
     const result = await registerUser(formData.name, formData.email, formData.password);
 
     if (result.error) {
       setError(result.error);
       setLoading(false);
     } else {
-      // نجاح: التوجه لصفحة تسجيل الدخول
-      alert("Account created! Please sign in.");
+      alert(t('accountCreated'));
       router.push("/login");
     }
   };
@@ -69,7 +69,7 @@ const SignUp = () => {
 
           <div className="mb-10">
             <h1 className="text-4xl md:text-5xl font-medium tracking-tighter uppercase mb-4 text-black">
-              Create Account
+              {t('createAccount')}
             </h1>
           </div>
 
@@ -80,7 +80,7 @@ const SignUp = () => {
                 className="block w-full bg-transparent border-0 border-b border-neutral-300 py-3 focus:outline-none focus:ring-0 focus:border-black transition-colors peer text-base font-light"
               />
               <label htmlFor="name" className="absolute top-3 text-neutral-400 text-base font-light transition-all duration-300 transform -translate-y-7 scale-75 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-black">
-                Full Name
+                {t('fullName')}
               </label>
             </div>
 
@@ -90,7 +90,7 @@ const SignUp = () => {
                 className="block w-full bg-transparent border-0 border-b border-neutral-300 py-3 focus:outline-none focus:ring-0 focus:border-black transition-colors peer text-base font-light"
               />
               <label htmlFor="email" className="absolute top-3 text-neutral-400 text-base font-light transition-all duration-300 transform -translate-y-7 scale-75 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-black">
-                Email Address
+                {t('emailAddress')}
               </label>
             </div>
 
@@ -100,7 +100,7 @@ const SignUp = () => {
                 className="block w-full bg-transparent border-0 border-b border-neutral-300 py-3 focus:outline-none focus:ring-0 focus:border-black transition-colors peer text-base font-light tracking-widest"
               />
               <label htmlFor="password" className="absolute top-3 text-neutral-400 text-base font-light transition-all duration-300 transform -translate-y-7 scale-75 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-black">
-                Password
+                {t('password')}
               </label>
             </div>
 
@@ -110,7 +110,7 @@ const SignUp = () => {
                 disabled={loading}
                 className="w-full py-5 bg-black text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-neutral-800 transition-colors duration-300 disabled:opacity-50"
               >
-                {loading ? "Creating Account..." : "Sign Up"}
+                {loading ? t('creatingAccount') : t('signUp')}
               </button>
               {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             </div>
@@ -118,7 +118,7 @@ const SignUp = () => {
 
           <div className="mt-12 pt-8 border-t border-neutral-200 text-center">
             <Link href="/login" className="font-bold uppercase text-black underline underline-offset-4">
-              Sign In Instead
+              {t('signInInstead')}
             </Link>
           </div>
         </motion.div>

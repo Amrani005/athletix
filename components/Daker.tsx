@@ -1,114 +1,151 @@
 "use client";
 
+import { useState, useEffect } from 'react';
+import { useLanguage } from '@/app/context/LanguageContext';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Mock data - replace titles and descriptions with your t('...') translation keys
+const slides = [
+  {
+    id: 0,
+    title: "COMMUNITY-DRIVEN CULTURE",
+    desc: "More than just a brand, we're a movement—connecting creatives, athletes, and trendsetters who define the streets. Welcome to ATHLETIX.",
+    img: "p_img8.png",
+    navLine1: "01",
+    navLine2: "Limited Drops. Maximum Impact."
+  },
+  {
+    id: 1,
+    title: "BUILT FOR THE STREETS",
+    desc: "Engineered for the unseen elements of the modern environment. Zero distractions. Pure physical expression.",
+    img: "https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=2000&auto=format&fit=crop",
+    navLine1: "02",
+    navLine2: "Built for the Streets"
+  },
+  {
+    id: 2,
+    title: "KINETIC ARCHITECTURE",
+    desc: "Premium materials sculpted to fit. Experience the raw intersection of high fashion and athletic utility.",
+    img: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop",
+    navLine1: "03",
+    navLine2: "ATHLETIX Attitude"
+  },
+  {
+    id: 3,
+    title: "FUTURE-READY FASHION",
+    desc: "Archive access granted. Unreleased colorways and rare iterations available for 48 hours only.",
+    img: "https://images.unsplash.com/photo-1512353087810-254cb9859f69?q=80&w=2000&auto=format&fit=crop",
+    navLine1: "04",
+    navLine2: "Future-Ready Fashion"
+  },
+  {
+    id: 4,
+    title: "THE VAULT IS OPEN",
+    desc: "Secure your pieces before they vanish. Join the collective and unlock exclusive drops.",
+    img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=2000&auto=format&fit=crop",
+    navLine1: "05",
+    navLine2: "Community-Driven Culture"
+  }
+];
+
 const Hero = () => {
+  const { t } = useLanguage();
+  const [active, setActive] = useState(0);
+
+  // Auto-play the slider every 6 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <section className="w-full mt-25 lg:mt-30 px-4 md:px-8 max-w-[90rem] mx-auto">
-      {/* Editorial Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 md:gap-4 h-auto lg:h-[50rem]">
+    <section className="w-full mt-24 lg:mt-28 px-4 md:px-8 max-w-[95rem] mx-auto">
+      <div className="relative w-full h-[35rem] md:h-[45rem] lg:h-[50rem] bg-black rounded-[2rem] overflow-hidden flex flex-col justify-end group shadow-2xl">
         
-        {/* 1. Main Hero Block - The "Hook" */}
-        <div className="lg:col-span-8 relative bg-black rounded-[2rem] 
-        overflow-hidden flex flex-col justify-between p-8 md:p-14 lg:p-20
-         group shadow-2xl">
-           
-           {/* Layer 1: Background Image (z-0) */}
-           <img 
-             src="p_img8.png" 
-             alt="Athletix Main Campaign" 
-             className="absolute inset-0 w-full h-full object-cover 
-             z-0 transition-transform duration-[2000ms] ease-out 
-             group-hover:scale-105"
-           />
-           
-           {/* Layer 2: Deep Moody Overlays (z-10) */}
-           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20 z-10 pointer-events-none"></div>
-           <div className="absolute inset-0 bg-black/20 z-10 pointer-events-none transition-opacity duration-1000 group-hover:opacity-0"></div>
-           
-           {/* Layer 3: Content (z-20) */}
-           <div className="relative z-20 flex justify-start">
-             <span className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/20 bg-black/20 backdrop-blur-md">
-               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-               <span className="text-[10px] font-bold tracking-[0.3em] text-white uppercase">
-                 Capsule 01 // The Arrival
-               </span>
-             </span>
-           </div>
+        {/* Layer 1: Background Images (Crossfade) */}
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={active}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            src={slides[active].img}
+            alt="Athletix Campaign"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+        </AnimatePresence>
 
-           <div className="relative z-20 mt-40 lg:mt-0">
-             <h1 className="text-6xl md:text-8xl lg:text-[7.5rem] font-medium tracking-tighter leading-[0.85] text-white mb-8 drop-shadow-2xl">
-               KINETIC<br />ARCHITECTURE.
-             </h1>
-             <p className="text-neutral-300 text-lg md:text-xl font-light tracking-wide leading-relaxed max-w-lg mb-10 drop-shadow-md">
-               Zero distractions. Pure physical expression. Engineered for the unseen elements of the modern environment.
-             </p>
-             
-             {/* Sharp, Brutalist CTA */}
-             <button className="relative overflow-hidden group/btn inline-flex items-center justify-center px-10 py-5 bg-white text-black text-sm font-bold uppercase tracking-[0.1em] transition-transform active:scale-95">
-               <a href="#products" className="relative z-10 flex items-center gap-4">
-                 Explore the Drop
-                 <svg className="w-5 h-5 transition-transform duration-500 group-hover/btn:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                 </svg>
-               </a>
-             </button>
-           </div>
+        {/* Layer 2: Gradient Overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
+
+        {/* Layer 3: Main Text Content */}
+        <div className="relative z-20 px-8 md:px-16 lg:px-24 pb-32 md:pb-40 w-full max-w-4xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter uppercase leading-[0.9] text-white mb-6">
+                {slides[active].title}
+              </h1>
+              <p className="text-neutral-300 text-sm md:text-base font-medium tracking-wide leading-relaxed max-w-lg mb-8">
+                {slides[active].desc}
+              </p>
+              
+              {/* Pill-shaped Button */}
+              <a 
+                href="#products" 
+                className="inline-flex items-center gap-4 bg-white text-black pl-8 pr-2 py-2 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform duration-300"
+              >
+                {t('shopNow') || "Shop Now"}
+                <span className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-full">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </span>
+              </a>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* 2. Secondary Stack - The "Teasers" */}
-        <div className="lg:col-span-4 flex flex-col gap-2 md:gap-4 h-[35rem] lg:h-full">
-          
-          {/* Top Bento - Exclusivity Hook */}
-          <div className="flex-1 bg-black rounded-[2rem] p-8 md:p-12 relative overflow-hidden group cursor-pointer">
-            {/* Layer 1: Background Image */}
-            <img 
-              src="https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=1000&auto=format&fit=crop" 
-              alt="The Vault Sneakers" 
-              className="absolute inset-0 w-full h-full object-cover z-0 
-              transition-transform duration-1000 group-hover:scale-110"
-            />
-            {/* Layer 2: Overlay */}
-            <div className="absolute inset-0 bg-black/60 z-10 group-hover:bg-black/40 transition-colors duration-500"></div>
-            
-            {/* Layer 3: Content */}
-            <div className="flex flex-col h-full justify-between relative z-20">
-              <h3 className="text-[10px] font-bold tracking-[0.3em] text-neutral-400 uppercase">Archive Access</h3>
-              <div>
-                <div className="text-5xl md:text-6xl font- tracking-tighter text-white mb-4 drop-shadow-lg">
-                  THE<br />VAULT.
+        {/* Layer 4: Bottom Slider Navigation */}
+        <div className="absolute bottom-0 left-0 right-0 z-30 px-8 md:px-16 lg:px-24 pb-8">
+          <div className="grid grid-cols-5 gap-2 md:gap-4">
+            {slides.map((slide, index) => (
+              <div 
+                key={slide.id}
+                onClick={() => setActive(index)}
+                className="cursor-pointer group flex flex-col justify-end"
+              >
+                {/* Progress Bar Container */}
+                <div className="w-full h-[2px] bg-white/20 mb-3 relative overflow-hidden">
+                  {active === index && (
+                    <motion.div 
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 6, ease: "linear" }}
+                      className="absolute top-0 left-0 h-full bg-white"
+                    />
+                  )}
                 </div>
-                <p className="text-neutral-300 text-sm font-medium tracking-wide">
-                  Rare iterations. Unreleased colorways.<br/>Access granted for 48 hours.
-                </p>
+                
+                {/* Nav Text */}
+                <div className={`hidden md:block text-[10px] uppercase tracking-widest transition-colors duration-300 ${active === index ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                  <span className="font-black block mb-1">{slide.navLine1}</span>
+                  <span className="font-medium line-clamp-1">{slide.navLine2}</span>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-
-          {/* Bottom Bento - Material/Texture Hook */}
-          <div className="flex-[0.8] bg-black rounded-[2rem] p-8 md:p-10 relative overflow-hidden flex items-end group cursor-pointer">
-            {/* Layer 1: Background Image */}
-            <img 
-              src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop" 
-              alt="Fabric Texture" 
-              className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-1000 group-hover:scale-110"
-            />
-            {/* Layer 2: Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
-            
-            {/* Layer 3: Content */}
-            <div className="relative z-20 w-full flex justify-between items-end">
-              <div>
-                <h3 className="text-2xl font-medium tracking-tight text-white">Materia Prima</h3>
-                <p className="text-neutral-400 text-xs tracking-[0.1em] uppercase mt-2">Sculpted to fit</p>
-              </div>
-              <div className="w-12 h-12 rounded-full border border-white/30 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all duration-500">
-                <svg className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
         </div>
+
       </div>
     </section>
   );

@@ -13,7 +13,6 @@ export default function LogoutButton() {
 
   return (
     <>
-      {/* 1. الزر الرئيسي في لوحة القيادة */}
       <button 
         type="button" 
         onClick={() => setIsConfirmed(true)}
@@ -23,12 +22,10 @@ export default function LogoutButton() {
         <span>Log Out</span>
       </button>
 
-      {/* 2. النافذة المنبثقة (Modal Overlay) */}
       {isConfirmed && (
         <motion.div className="fixed inset-0 z-50 flex items-center justify-center
          bg-slate-900/40 backdrop-blur-sm transition-opacity">
           
-          {/* صندوق التأكيد */}
           <motion.div
             initial={{opacity:0,y:-50}}
             whileInView={{opacity:1,y:0}}
@@ -36,7 +33,6 @@ export default function LogoutButton() {
           className="bg-white rounded-3xl p-8  max-w-sm w-full 
           shadow-2xl transform transition-all m-4">
             
-            {/* رأس النافذة وزر الإغلاق */}
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-tajawal font-bold 
               text-slate-800">
@@ -52,12 +48,10 @@ export default function LogoutButton() {
               </button>
             </div>
 
-            {/* نص الرسالة */}
             <p className="text-slate-600 font-tajawal mb-8 text-sm leading-relaxed">
               هل أنت متأكد أنك تريد إنهاء الجلسة وتسجيل الخروج من لوحة القيادة؟
             </p>
 
-            {/* أزرار الإجراءات */}
             <div className="flex gap-3">
               <button 
                 onClick={handleLogOut}

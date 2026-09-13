@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const { t } = useLanguage();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,10 +38,10 @@ const Contact = () => {
           className="border-b border-neutral-200 pb-8 mb-12 lg:mb-20"
         >
           <h1 className="text-4xl md:text-6xl font-medium tracking-tighter uppercase text-black">
-            Client Services
+            {t('clientServices')}
           </h1>
           <p className="text-neutral-500 mt-4 text-sm tracking-wide max-w-xl leading-relaxed">
-            For inquiries regarding the archive, recent orders, or general styling questions, please submit a request below. Our concierge team operates globally and responds within 24 hours.
+            {t('contactDescription')}
           </p>
         </motion.div>
 
@@ -67,11 +69,11 @@ const Contact = () => {
             {/* Contact Details */}
             <div className="flex flex-col gap-6 text-sm font-light tracking-wide text-neutral-600">
               <div>
-                <h3 className="text-xs font-bold tracking-[0.2em] text-black uppercase mb-2">Headquarters</h3>
+                <h3 className="text-xs font-bold tracking-[0.2em] text-black uppercase mb-2">{t('headquarters')}</h3>
                 <p>1942 Innovation Drive<br/>Design District, NY 10012</p>
               </div>
               <div>
-                <h3 className="text-xs font-bold tracking-[0.2em] text-black uppercase mb-2">Direct Contact</h3>
+                <h3 className="text-xs font-bold tracking-[0.2em] text-black uppercase mb-2">{t('directContact')}</h3>
                 <p>concierge@athletix.com<br/>+1 (800) 555-0199</p>
               </div>
             </div>
@@ -102,7 +104,7 @@ const Contact = () => {
                   htmlFor="name"
                   className="absolute top-4 text-neutral-400 text-lg font-light transition-all duration-300 transform -translate-y-8 scale-75 origin-left peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-8 peer-focus:scale-75 peer-focus:text-black"
                 >
-                  Full Name
+                  {t('fullName')}
                 </label>
               </div>
 
@@ -122,7 +124,7 @@ const Contact = () => {
                   htmlFor="email"
                   className="absolute top-4 text-neutral-400 text-lg font-light transition-all duration-300 transform -translate-y-8 scale-75 origin-left peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-8 peer-focus:scale-75 peer-focus:text-black"
                 >
-                  Email Address
+                  {t('emailAddress')}
                 </label>
               </div>
 
@@ -142,7 +144,7 @@ const Contact = () => {
                   htmlFor="message"
                   className="absolute top-4 text-neutral-400 text-lg font-light transition-all duration-300 transform -translate-y-8 scale-75 origin-left peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-8 peer-focus:scale-75 peer-focus:text-black"
                 >
-                  Your Message
+                  {t('yourMessage')}
                 </label>
               </div>
 
@@ -151,7 +153,7 @@ const Contact = () => {
                 type="submit"
                 className="mt-6 w-full md:w-auto self-start px-12 py-5 bg-black text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98]"
               >
-                Submit Inquiry
+                {t('submitInquiry')}
               </button>
 
             </form>

@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { signIn } from "next-auth/react"; // أضف هذا
-import { useRouter } from "next/navigation"; // أضف هذا
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const Login = () => {
   const router = useRouter();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); 
   
@@ -27,19 +29,18 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // محاولة تسجيل الدخول عبر NextAuth
     const res = await signIn("credentials", {
       email: formData.email,
       password: formData.password,
-      redirect: false, // لا نريد إعادة توجيه تلقائية من المكتبة
+      redirect: false,
     });
 
     if (res?.error) {
-      setError("Invalid email or password.");
+      setError(t('invalidCredentials'));
       setLoading(false);
     } else {
-      router.push("/"); // التوجه للرئيسية بعد النجاح
-      router.refresh(); // تحديث الصفحة ليعرف النظام أن المستخدم سجل دخوله
+      router.push("/");
+      router.refresh();
     }
     console.log("Logging in:", formData.email);
   };
@@ -85,10 +86,10 @@ const Login = () => {
           {/* Header */}
           <div className="mb-10">
             <h1 className="text-4xl md:text-5xl font-medium tracking-tighter uppercase mb-4 text-black">
-              Sign In
+              {t('signIn')}
             </h1>
             <p className="text-neutral-500 text-sm tracking-wide leading-relaxed">
-              Access the archive. View your order history, track shipments, and manage your preferences.
+              {t('signInDescription')}
             </p>
           </div>
 
@@ -110,7 +111,7 @@ const Login = () => {
                 htmlFor="email"
                 className="absolute top-3 text-neutral-400 text-base font-light transition-all duration-300 transform -translate-y-7 scale-75 origin-left peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-black"
               >
-                Email Address
+                {t('emailAddress')}
               </label>
             </div>
 
@@ -130,7 +131,7 @@ const Login = () => {
                 htmlFor="password"
                 className="absolute top-3 text-neutral-400 text-base font-light transition-all duration-300 transform -translate-y-7 scale-75 origin-left tracking-normal peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:text-black"
               >
-                Password
+                {t('password')}
               </label>
             </div>
 
@@ -141,10 +142,9 @@ const Login = () => {
                 disabled={loading}
                 className="w-full py-5 bg-black text-white text-sm font-bold uppercase tracking-[0.1em] hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98] disabled:opacity-50"
               >
-               {loading ? "Accessing..." : "Access Account"}
+               {loading ? t('accessing') : t('accessAccount')}
               </button>
 
-{/* إضافة رسالة خطأ أسفل الزر في حال فشل الدخول */}
               {error && (
               <p className="text-red-500 text-xs font-bold uppercase text-center mt-4">
                {error}
@@ -160,13 +160,13 @@ const Login = () => {
               href="/forgot-password" 
               className="font-bold tracking-wide text-neutral-500 hover:text-black transition-colors"
             >
-              Forgot Password?
+              {t('forgotPassword')}
             </Link>
             <Link 
               href="/signup" 
               className="font-bold tracking-wide uppercase text-black underline underline-offset-4 hover:text-neutral-500 transition-colors"
             >
-              Create Account
+              {t('createAccount')}
             </Link>
           </div>
 

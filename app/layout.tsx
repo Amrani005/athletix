@@ -4,6 +4,7 @@ import { Fira_Code } from "next/font/google";
 import Header from "@/components/Header";
 import React from "react";
 import { ProductProvider } from "./context/ProductContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import "@/app/globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,9 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} antialiased`}
       >
          <CartCountProvider>
-          <ProductProvider>
-            {children}
-          </ProductProvider>
+          <LanguageProvider>
+            <ProductProvider>
+              {children}
+            </ProductProvider>
+          </LanguageProvider>
           
         </CartCountProvider>
       </body>
@@ -45,23 +48,23 @@ export default function RootLayout({
 export const navigation = [
   {
     id: "0",
-    title: "Home",
+    titleKey: "home" as const,
     url: "/home",
   },
   {
     id: "1",
-    title: "About ",
+    titleKey: "about" as const,
     url: "/about",
     
   },
   {
     id: "2",
-    title: "Collection",
+    titleKey: "collection" as const,
     url: "/collection",
   },
   {
     id: "3",
-    title: "Contact",
+    titleKey: "contact" as const,
     url: "/contact",
   },
 ];

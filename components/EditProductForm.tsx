@@ -13,6 +13,7 @@ const CLOUD_NAME = "deimq7tzj";
 const UPLOAD_PRESET = "dxtx2rdd"; 
 
 const STANDARD_SIZES = ["S", "M", "L", "XL", "XXL"];
+const PRODUCT_CATEGORIES = ["Men", "Women", "Kids", "Unisex"];
 
 export default function EditProductForm({ product }: { product: any }) {
   const router = useRouter(); 
@@ -84,6 +85,7 @@ export default function EditProductForm({ product }: { product: any }) {
       // Pass the product ID so the backend knows which item to update
       finalData.append("id", product.id);
       finalData.append("name", (form.elements.namedItem("name") as HTMLInputElement).value);
+      finalData.append("category", (form.elements.namedItem("category") as HTMLSelectElement).value);
       finalData.append("price", (form.elements.namedItem("price") as HTMLInputElement).value);
       finalData.append("priceBefore", (form.elements.namedItem("priceBefore") as HTMLInputElement).value || "");
       finalData.append("description", (form.elements.namedItem("description") as HTMLTextAreaElement).value);
@@ -188,6 +190,21 @@ export default function EditProductForm({ product }: { product: any }) {
               >
                 Product Name
               </label>
+            </div>
+
+            <div className="relative group">
+              <select
+                name="category"
+                id="category"
+                defaultValue={product.category || "Unisex"}
+                disabled={isSubmitting}
+                className="block w-full bg-transparent border-0 border-b border-neutral-300 py-4 focus:outline-none focus:ring-0 focus:border-black transition-colors text-lg font-light appearance-none"
+              >
+                <option value="" disabled>Category</option>
+                {PRODUCT_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
             </div>
 
             {/* Pricing Row */}

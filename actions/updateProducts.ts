@@ -2,7 +2,6 @@
 
 import {db} from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { describe } from "node:test";
 
 export async function updateProducts(formData:FormData){
     try{
@@ -15,6 +14,7 @@ export async function updateProducts(formData:FormData){
             },
             data:{
                 name: formData.get("name")as string,
+                category: (formData.get("category") as string) || "Uncategorized",
                 price: Number(formData.get("price")),
                 description:(formData.get("description")as string) || null,
                 imageUrl: (formData.get("imageUrl") as string )||"",

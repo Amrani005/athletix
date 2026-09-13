@@ -15,6 +15,7 @@ model Product {
   id          String   @id @default(uuid())
   name        String
   description String?
+  category    String   @default("Uncategorized")
   price       Float
   size        String   @default("[]")
   imageUrl    String

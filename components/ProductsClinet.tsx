@@ -1,13 +1,10 @@
-"use client";
+'use client';
 
-import React, { useCallback, useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import Footer from "@/components/Footer";
-import CollectionFilters from "@/components/CollectionFilters";
-import { useLanguage } from "@/app/context/LanguageContext";
+import Link from 'next/link';
+import { motion, type Variants } from 'framer-motion';
+import { useLanguage } from '@/app/context/LanguageContext';
 
-type Product = {
+type ProductCard = {
   id: string;
   name: string;
   description: string | null;
@@ -15,60 +12,52 @@ type Product = {
   imageUrl: string;
 };
 
-const CollectionClient = ({ products }: { products: Product[] }) => {
-  const [visibleProducts, setVisibleProducts] = useState(products);
+const gridVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: 'easeOut' },
+  },
+};
+
+export default function ProductsClinet({ products }: { products: ProductCard[] }) {
   const { t } = useLanguage();
 
-  const handleFilteredProductsChange = useCallback((filteredProducts: Product[]) => {
-    setVisibleProducts(filteredProducts);
-  }, []);
-
-  const handleClearFilters = useCallback(() => {
-    setVisibleProducts(products);
-  }, [products]);
-
   return (
-    <div className="w-full min-h-screen bg-white text-black selection:bg-black selection:text-white pt-24 lg:pt-32 flex flex-col">
-      <div className="max-w-[90rem] mx-auto px-4 md:px-8 w-full flex-grow">
-        
-        {/* Editorial Header & Search */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-neutral-200 pb-8 mb-10 gap-6">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-medium tracking-tighter uppercase text-black">
-              {t('collection')}
-            </h1>
-            <p className="text-neutral-500 mt-2 text-sm tracking-widest uppercase">
-              {visibleProducts.length} {visibleProducts.length === 1 ? t('collectionResults') : t('collectionResultsPlural')}
-            </p>
-          </div>
-          
-          <CollectionFilters
-            products={products}
-            onFilteredProductsChange={handleFilteredProductsChange}
-            onClearFilters={handleClearFilters}
-          />
-        </div>
+    <section id="products" className="w-full bg-white text-black py-16 md:py-24 px-4 md:px-8">
+      <div className="max-w-[90rem] mx-auto">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, y: 0,x:0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
+          className="border-b border-neutral-200 pb-8 mb-12 lg:mb-16"
+        >
+          <h1 className="text-5xl md:text-8xl lg:text-[7.5rem] font-medium tracking-tighter uppercase leading-[0.85] text-black">
+            {t('ourProducts')}
+          </h1>
+        </motion.div>
 
-        {/* Main Content Layout */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 pb-20">
-          
-          {/* Future category filter after adding category to Product:
-              category.map((item) => renderCategoryButton(item)) */}
-          {/* Future type filter after adding type to Product:
-              types.map((item) => renderTypeButton(item)) */}
-
-          {/* Product Grid */}
-          <div className="w-full">
-            {visibleProducts.length > 0 ? (
-               <motion.div
+       <motion.div
+  variants={gridVariants}
   initial="hidden"
   whileInView="visible"
   viewport={{ once: true, amount: 0.08 }}
-  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12"
+  className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12"
 >
-  {visibleProducts.length > 0 ? (
-    visibleProducts.map((item) => (
-      <motion.div key={item.id} >
+  {products.length > 0 ? (
+    products.map((item) => (
+      <motion.div key={item.id} variants={cardVariants}>
         <Link
           href={`/productpage/${item.id}`}
           className="group flex flex-col h-full cursor-pointer"
@@ -137,7 +126,7 @@ const CollectionClient = ({ products }: { products: Product[] }) => {
               
               <div className="flex justify-between items-center text-[11px] text-neutral-400">
                 <span className="font-light tracking-wider uppercase">
-                  {t('coreCollection')}
+                   {t('coreCollection')}
                 </span>
               </div>
             </div>
@@ -147,7 +136,7 @@ const CollectionClient = ({ products }: { products: Product[] }) => {
     ))
   ) : (
     <motion.div
-      
+      variants={cardVariants}
       className="col-span-full py-20 flex justify-center border border-neutral-200 border-dashed"
     >
       <p className="text-sm font-bold tracking-[0.2em] text-neutral-400 uppercase">
@@ -156,30 +145,7 @@ const CollectionClient = ({ products }: { products: Product[] }) => {
     </motion.div>
   )}
 </motion.div>
-            ) : (
-              /* Premium Empty State */
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-32 border border-neutral-200 border-dashed"
-              >
-                <p className="text-lg font-light text-neutral-400 tracking-wide mb-4 text-center">
-                  {t('noProductsMatched')}
-                </p>
-                <p className="text-xs font-bold tracking-[0.1em] uppercase text-neutral-400">
-                  {t('tryAnotherSearch')}
-                </p>
-              </motion.div>
-            )}
-          </div>
-        </div>
       </div>
-      
-      <div className="border-t border-neutral-200">
-        <Footer />
-      </div>
-    </div>
+    </section>
   );
-};
-
-export default CollectionClient;
+}

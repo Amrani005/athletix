@@ -6,13 +6,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     const API_KEY = process.env.API_KEY;
 
-    // هنا غيّر رابط الـ API إلى موقعك أو الموقع اللي تستعمله
     const response = await axios.post(
       "https://reqres.in/api/users",
       body,
       {
         headers: {
-          Authorization: `Bearer ${API_KEY}`, // أو x-api-key لو الموقع يستخدمها
+          Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json",
         },
       }

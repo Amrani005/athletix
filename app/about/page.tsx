@@ -8,8 +8,10 @@ import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
 import { options } from "../layout";
 import Header from "@/components/Header";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 const About = () => {
+  const { t } = useLanguage();
   // Cinematic staggering animation variants
   const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -32,7 +34,7 @@ const About = () => {
           className="border-b border-neutral-200 pb-8 mb-12 lg:mb-24"
         >
           <h1 className="text-4xl md:text-6xl font-medium tracking-tighter uppercase text-black">
-            The Vision
+            {t('theVision')}
           </h1>
           <p className="text-neutral-500 mt-4 text-sm tracking-widest uppercase">
             EST. 2026 // Athletix
@@ -71,19 +73,19 @@ const About = () => {
           >
             <motion.div  className="flex flex-col gap-6 text-lg md:text-2xl font-light leading-relaxed text-neutral-600">
               <p>
-                <strong className="font-medium text-black">Athletix</strong> was born from a desire to bridge the gap between high-performance technical wear and minimalist urban architecture. We do not just design garments; we engineer them.
+                <strong className="font-medium text-black">Athletix</strong> {t('aboutIntro')}
               </p>
               <p>
-                Every silhouette is meticulously crafted using proprietary textiles to ensure fluidity, durability, and a striking visual presence. We stripped away the noise, the logos, and the excess, leaving only what is essential for the modern environment.
+                {t('aboutCraft')}
               </p>
             </motion.div>
 
             <motion.div  className="border-l border-black pl-8 mt-4">
               <h2 className="text-xs font-bold tracking-[0.2em] text-black uppercase mb-4">
-                Our Directive
+                {t('ourDirective')}
               </h2>
               <p className="text-xl md:text-3xl font-medium tracking-tight text-black leading-snug">
-                To redefine the modern uniform through kinetic architecture and uncompromising material quality.
+                {t('aboutDirective')}
               </p>
             </motion.div>
           </motion.div>
@@ -99,7 +101,7 @@ const About = () => {
             className="flex items-end justify-between border-b border-neutral-200 pb-8 mb-12"
           >
             <h2 className="text-3xl md:text-5xl font-medium tracking-tighter uppercase text-black">
-              The Standard
+              {t('theStandard')}
             </h2>
           </motion.div>
 
@@ -125,10 +127,10 @@ const About = () => {
                   0{index + 1}
                 </span>
                 <h3 className="font-medium text-2xl tracking-tight uppercase mb-4 text-black">
-                  {item.title}
+                  {index === 0 ? t('qualityAssurance') : index === 1 ? t('convenience') : t('customerService')}
                 </h3>
                 <p className="text-neutral-500 font-light text-base leading-relaxed tracking-wide">
-                  {item.desc}
+                  {index === 0 ? t('qualityDescription') : index === 1 ? t('convenienceDescription') : t('customerServiceDescription')}
                 </p>
               </motion.div>
             ))}

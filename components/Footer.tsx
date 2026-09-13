@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { useLanguage } from '@/app/context/LanguageContext';
 
 const FOOTER_LINKS = [
   {
@@ -25,6 +26,12 @@ export const socialMedia = [
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
+  const footerLinks = [
+    { title: t('shop'), links: [t('mensCollection'), t('womensCollection'), t('equipment'), t('newArrivals')] },
+    { title: t('support'), links: [t('trackOrder'), t('returns'), t('sizeGuide'), t('faq')] },
+    { title: t('legal'), links: [t('privacy'), t('terms'), t('shippingPolicy')] },
+  ];
 
   return (
     <footer className="w-full bg-neutral-50 pt-16 pb-8 px-6 md:px-12 lg:px-24 border-t border-neutral-200">
@@ -36,10 +43,10 @@ const Footer = () => {
           {/* Brand & Newsletter Input */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             <h2 className="text-2xl font-semibold text-neutral-900 tracking-tight">
-              Unlock Exclusive Drops.
+              {t('unlockDrops')}
             </h2>
             <p className="text-neutral-500 font-light max-w-sm">
-              Subscribe to get early access to new collections, restocks, and exclusive Athletix deals.
+              {t('newsletterDescription')}
             </p>
             
             {/* Newsletter Input Field */}
@@ -49,14 +56,14 @@ const Footer = () => {
             >
               <input
                 type="email"
-                placeholder="Enter your email address"
+                placeholder={t('emailPlaceholder')}
                 required
                 className="w-full bg-transparent outline-none text-neutral-900 placeholder:text-neutral-400 font-light"
               />
               <button 
                 type="submit" 
                 className="ml-4 p-2 text-neutral-400 hover:text-neutral-900 transition-colors duration-300"
-                aria-label="Subscribe"
+                aria-label={t('subscribe')}
               >
                 <ArrowRightIcon className="w-5 h-5" />
               </button>
@@ -65,7 +72,7 @@ const Footer = () => {
 
           {/* Navigation Links */}
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8">
-            {FOOTER_LINKS.map((section, index) => (
+            {footerLinks.map((section, index) => (
               <div key={index} className="flex flex-col gap-4">
                 <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-widest">
                   {section.title}
@@ -91,7 +98,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-neutral-200">
           
           <h1 className="text-sm font-medium text-neutral-500 tracking-wide text-center md:text-left">
-            &copy; {currentYear} Athletix. All rights reserved.
+            &copy; {currentYear} Athletix. {t('allRightsReserved')}
           </h1>
           
           <div className="flex items-center gap-4">

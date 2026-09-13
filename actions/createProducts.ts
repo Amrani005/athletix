@@ -8,6 +8,7 @@ export async function createProducts(formData:FormData){
         await db.product.create({
             data:{
                 name: formData.get("name")as string,
+                category: (formData.get("category") as string) || "Uncategorized",
                 price: Number(formData.get("price")),
                 description:(formData.get("description")as string) || null,
                 imageUrl: (formData.get("imageUrl") as string )||"",
@@ -20,6 +21,7 @@ export async function createProducts(formData:FormData){
         return {success:true};
     }catch(error){
         console.error("Error creating product: ", error);
+        console.log(error)
         return {success:false};
     }
 }
